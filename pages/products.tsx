@@ -1,18 +1,41 @@
-import { NextPage } from "next";
+import Header from "@/src/components/Header";
+import ProductsList from "@/src/components/ProductsList";
+import { ProductType, fetchProduct, fetchProducts } from "@/src/services/products";
+import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { ReactNode } from "react";
+import { Container } from "reactstrap";
 
-const Products: NextPage = () => {
+export const getStaticProps: GetStaticProps = async() => {
+  const products = await fetchProducts()
+
+  return {props: { products }}
+}
+
+const Products: NextPage = (props: {
+  children?: ReactNode
+  products?: ProductType[]
+
+}) => {
   return (
     <>
       <Head>
-        <title>Nossos Produtos</title>
+        <title>Our Products</title>
         <meta name="description" content="Conheça todos os nossos produtos" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>
-        Nossos Produtos
-      </h1>
+      <Header />
+      <main>
+        <Container className="mb-5">
+          <h1 className="my-5">
+           Our Products
+          </h1>
+
+          {<ProductsList products={props.products!} />}
+        </Container>
+      </main>
+      
     </>
   )
 }
